@@ -1,0 +1,24 @@
+graph LR
+    C1["👤 Customer\n─────────\ncustomer_id\nname\ncountry\nrisk_score\npct_flagged"]
+    C2["👤 Customer\n─────────\ncustomer_id\nname\ncountry\nrisk_score\npct_flagged"]
+
+    A1["🏦 Account\n─────────\naccount_id\naccount_type\nbalance\nbalance_velocity\ndormancy_days"]
+    A2["🏦 Account\n─────────\naccount_id\naccount_type\nbalance\nbalance_velocity\ndormancy_days"]
+    A3["🏦 Account\n─────────\naccount_id\naccount_type\nbalance\nbalance_velocity\ndormancy_days"]
+
+    M1["🏪 Merchant\n─────────\nmerchant_id\nname\ncategory\nrisk_tier\nflag_rate"]
+
+    C1 -- "OWNS" --> A1
+    C1 -- "OWNS" --> A2
+    C2 -- "OWNS" --> A3
+
+    A1 -- "TRANSACTED_WITH\ntxn_count, total_amount\navg_amount, has_flagged_txn" --> A2
+    A2 -- "TRANSACTED_WITH\ntxn_count, total_amount\navg_amount, has_flagged_txn" --> A3
+    A3 -- "TRANSACTED_WITH\ntxn_count, total_amount\navg_amount, has_flagged_txn" --> A1
+
+    style C1 fill:#4c8bf5,color:#fff
+    style C2 fill:#4c8bf5,color:#fff
+    style A1 fill:#34a853,color:#fff
+    style A2 fill:#34a853,color:#fff
+    style A3 fill:#34a853,color:#fff
+    style M1 fill:#ea4335,color:#fff

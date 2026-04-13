@@ -1,0 +1,41 @@
+erDiagram
+    dim_customer ||--o{ dim_account : "owns"
+    dim_account ||--o{ fact_transaction : "sends from"
+    dim_account ||--o{ fact_transaction : "receives to"
+    dim_merchant ||--o{ fact_transaction : "transacted at"
+
+    dim_customer {
+        UUID customer_id PK
+        VARCHAR name
+        VARCHAR email
+        VARCHAR country
+        DECIMAL risk_score
+    }
+
+    dim_merchant {
+        UUID merchant_id PK
+        VARCHAR name
+        VARCHAR category
+        VARCHAR country
+        VARCHAR risk_tier
+    }
+
+    dim_account {
+        UUID account_id PK
+        UUID customer_id FK
+        VARCHAR account_type
+        VARCHAR currency
+        DECIMAL balance
+        VARCHAR status
+    }
+
+    fact_transaction {
+        UUID txn_id PK
+        UUID from_account_id FK
+        UUID to_account_id FK
+        UUID merchant_id FK
+        DECIMAL amount
+        TIMESTAMP txn_timestamp
+        BOOLEAN is_flagged
+        VARCHAR flag_reason
+    }

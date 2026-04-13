@@ -1,0 +1,48 @@
+flowchart LR
+    subgraph Source["Source"]
+        PG["PostgreSQL\nOLTP"]
+    end
+
+    subgraph Bronze["Bronze Layer"]
+        direction TB
+        B1["dim_customer"]
+        B2["dim_merchant"]
+        B3["dim_account"]
+        B4["fact_transaction"]
+        BM["+ _ingested_at\n+ _source_table\n+ _batch_id"]
+    end
+
+    subgraph Silver["Silver Layer"]
+        direction TB
+        S1["silver_customer\n✓ deduplicated\n✓ email validated"]
+        S2["silver_transaction\n✓ enriched joins\n✓ hour_of_day\n✓ is_international\n✓ amount_bucket"]
+    end
+
+    subgraph Gold["Gold Layer"]
+        direction TB
+        G1["gold_customer_features\npct_flagged, risk_score\navg_amount_30d"]
+        G2["gold_account_features\nbalance_velocity\ndormancy_days\nnight_txn_pct"]
+        G3["gold_merchant_risk\nflag_rate\ntotal_volume"]
+        G4["gold_transaction_pairs\ntxn_count\ntotal_amount\nhas_flagged_txn"]
+    end
+
+    PG -- "JDBC\n1:1 copy" --> Bronze
+    Bronze -- "Clean\nValidate\nEnrich" --> Silver
+    Silver -- "Aggregate\nFeature\nEngineer" --> Gold
+
+    style Source fill:#336791,color:#fff
+    style Bronze fill:#cd7f32,color:#fff
+    style Silver fill:#c0c0c0,color:#000
+    style Gold fill:#ffd700,color:#000
+    style PG fill:#336791,color:#fff
+    style B1 fill:#a0652a,color:#fff
+    style B2 fill:#a0652a,color:#fff
+    style B3 fill:#a0652a,color:#fff
+    style B4 fill:#a0652a,color:#fff
+    style BM fill:#a0652a,color:#fff
+    style S1 fill:#808080,color:#fff
+    style S2 fill:#808080,color:#fff
+    style G1 fill:#c5a800,color:#000
+    style G2 fill:#c5a800,color:#000
+    style G3 fill:#c5a800,color:#000
+    style G4 fill:#c5a800,color:#000

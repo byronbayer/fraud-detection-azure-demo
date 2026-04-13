@@ -1,0 +1,43 @@
+flowchart LR
+    subgraph Source["Source System"]
+        PG["PostgreSQL\n(Star Schema)\n~10K transactions"]
+    end
+
+    subgraph Databricks["Azure Databricks"]
+        direction TB
+        Bronze["Bronze Layer\nRaw + Metadata"]
+        Silver["Silver Layer\nCleaned + Enriched"]
+        Gold["Gold Layer\nFeature Engineering"]
+        Bronze --> Silver --> Gold
+    end
+
+    subgraph Targets["Query Backends"]
+        Neo4j["Neo4j\n(Graph Database)\nFraud Patterns"]
+        SparkSQL["Spark SQL\n(Gold Tables)\nAggregations"]
+    end
+
+    subgraph AI["AI Layer"]
+        OpenAI["Azure OpenAI\nGPT-4o"]
+    end
+
+    KV["Azure Key Vault\nCredentials & Secrets"]
+
+    PG -- "JDBC" --> Bronze
+    Gold -- "Spark Connector\n(writes)" --> Neo4j
+    Gold -. "Registered as\nSQL views" .-> SparkSQL
+
+    OpenAI -- "Generated SQL" --> SparkSQL
+    OpenAI -- "Generated Cypher\n(HTTP API)" --> Neo4j
+
+    KV -. "Secrets" .-> Databricks
+    KV -. "Secrets" .-> AI
+
+    style Source fill:#4a90d9,color:#fff
+    style Databricks fill:#ff6f00,color:#fff
+    style Neo4j fill:#018bff,color:#fff
+    style SparkSQL fill:#ff6f00,color:#fff
+    style OpenAI fill:#10a37f,color:#fff
+    style KV fill:#0078d4,color:#fff
+    style Bronze fill:#cd7f32,color:#fff
+    style Silver fill:#c0c0c0,color:#000
+    style Gold fill:#ffd700,color:#000

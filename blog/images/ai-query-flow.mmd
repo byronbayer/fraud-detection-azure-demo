@@ -1,0 +1,23 @@
+sequenceDiagram
+    actor User as User / Analyst
+    participant NB as Notebook 05<br/>(Scala)
+    participant GPT as Azure OpenAI<br/>GPT-4o
+    participant SQL as Spark SQL<br/>(Gold Tables)
+    participant NEO as Neo4j<br/>(HTTP API)
+
+    User->>NB: "Find circular transaction patterns"
+    NB->>GPT: System prompt + user question
+    Note over GPT: Classifies as graph query<br/>Generates bounded Cypher
+
+    GPT-->>NB: JSON response<br/>target: "cypher"<br/>query: "MATCH (a1)-[:T]->(a2)..."
+
+    alt target = "sql"
+        NB->>SQL: spark.sql(query)
+        SQL-->>NB: DataFrame
+    else target = "cypher"
+        NB->>NEO: POST /db/neo4j/tx/commit<br/>Cypher query
+        NEO-->>NB: JSON results
+        Note over NB: Parse JSON → DataFrame
+    end
+
+    NB-->>User: Display results table

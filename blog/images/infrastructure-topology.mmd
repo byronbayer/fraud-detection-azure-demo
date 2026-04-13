@@ -1,0 +1,30 @@
+graph TB
+    subgraph RG["Resource Group: xan-fraud-dev-uks-01-rg"]
+        PSQL["Azure PostgreSQL\nFlexible Server\nB_Standard_B1ms\nfraud_detection db"]
+        DBX["Azure Databricks\nPremium Tier\nScala 2.13 / Spark 3.5\nDelta Lake"]
+        KV["Azure Key Vault\nRBAC-enabled\nSecrets User role"]
+        NEO["Neo4j 5.26\nAzure Container Instance\n2 vCPU / 4 GB\nCommunity Edition"]
+        OAI["Azure OpenAI\nGPT-4o\nGlobalStandard SKU"]
+    end
+
+    TF["Terraform >= 1.9.0\nazurerm 4.x\n14 .tf files"]
+
+    TF -- "provisions" --> RG
+
+    KV -. "pg-password" .-> DBX
+    KV -. "neo4j-password" .-> DBX
+    KV -. "openai-key" .-> DBX
+    KV -. "neo4j-bolt-url" .-> DBX
+
+    DBX -- "JDBC + SSL" --> PSQL
+    DBX -- "Spark Connector\n(writes)" --> NEO
+    DBX -- "HTTP API\n(reads)" --> NEO
+    DBX -- "REST API" --> OAI
+
+    style RG fill:#e8f0fe,color:#000
+    style PSQL fill:#336791,color:#fff
+    style DBX fill:#ff3621,color:#fff
+    style KV fill:#0078d4,color:#fff
+    style NEO fill:#018bff,color:#fff
+    style OAI fill:#10a37f,color:#fff
+    style TF fill:#7b42bc,color:#fff

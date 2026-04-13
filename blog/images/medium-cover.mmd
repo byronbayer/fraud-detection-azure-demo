@@ -1,0 +1,35 @@
+%%{init: {'theme': 'dark', 'themeVariables': {'primaryColor': '#1a1a2e', 'primaryTextColor': '#e0e0e0', 'primaryBorderColor': '#00d2ff', 'lineColor': '#00d2ff', 'secondaryColor': '#16213e', 'tertiaryColor': '#0f3460', 'fontSize': '18px'}}}%%
+flowchart LR
+    subgraph SOURCE ["SOURCE SYSTEM"]
+        direction TB
+        PG["🐘 PostgreSQL\n―――――――――\nTransactions\nCustomers\nAccounts\nMerchants"]
+    end
+
+    subgraph PROCESS ["DATABRICKS · DELTA LAKE"]
+        direction TB
+        B["🥉 Bronze\nRaw Ingestion"]
+        S["🥈 Silver\nCleansed & Enriched"]
+        G["🥇 Gold\nAggregated Analytics"]
+        B --> S --> G
+    end
+
+    subgraph INTELLIGENCE ["INTELLIGENCE LAYER"]
+        direction TB
+        NEO["🕸️ Neo4j\n―――――――――\nCircular Rings\nMoney Mules\nVelocity Pairs\nCross-Border Flows"]
+        AI["🤖 Azure OpenAI\n―――――――――\nGPT-4o\nNatural Language\nSQL + Cypher\nQuery Routing"]
+    end
+
+    PG ==>|"JDBC"| B
+    G ==>|"Spark Connector"| NEO
+    G ==>|"Spark SQL"| AI
+    NEO ==>|"HTTP API"| AI
+
+    style SOURCE fill:#0d3b66,stroke:#00d2ff,stroke-width:2px,color:#fff
+    style PROCESS fill:#1a1a2e,stroke:#ffd166,stroke-width:2px,color:#fff
+    style INTELLIGENCE fill:#3d0066,stroke:#ff6b6b,stroke-width:2px,color:#fff
+    style PG fill:#336791,stroke:#fff,stroke-width:1px,color:#fff
+    style B fill:#cd7f32,stroke:#fff,stroke-width:1px,color:#fff
+    style S fill:#c0c0c0,stroke:#fff,stroke-width:1px,color:#000
+    style G fill:#ffd700,stroke:#fff,stroke-width:1px,color:#000
+    style NEO fill:#008cc1,stroke:#fff,stroke-width:1px,color:#fff
+    style AI fill:#7b2d8e,stroke:#fff,stroke-width:1px,color:#fff
