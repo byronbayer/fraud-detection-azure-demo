@@ -266,7 +266,7 @@ One practical choice: the OpenAI client is a raw HTTP call, not an SDK import. D
 
 ## Lessons Learnt — The Abridged Version
 
-Over the course of building this project, I collected 14 distinct gotchas. The most impactful ones are woven through Parts 1 and 2, but here are a few more that didn't fit elsewhere:
+Over the course of building this project, I collected 20 distinct gotchas. The most impactful ones are woven through Parts 1 and 2, but here are a few more that didn't fit elsewhere:
 
 **Terraform `-target` and PowerShell quoting.** `terraform apply -target=azurerm_container_group.neo4j` fails because PowerShell splits unquoted `-target=value` at spaces. Solution: wrap each target in single quotes.
 
@@ -274,7 +274,7 @@ Over the course of building this project, I collected 14 distinct gotchas. The m
 
 **The `locations` module is easy to forget.** I declared the `azurerm/locations/azure` module but initially hardcoded `var.location` everywhere. If you declare a module, wire it in immediately — unused declarations are technical debt.
 
-The full list of 14 lessons is in [`docs/lessons-learnt.md`](https://github.com/byronbayer/fraud-detection-azure-demo/blob/main/docs/lessons-learnt.md) in the repo. If you're building something similar, it's worth reading before you start — it'll save you the half-days I lost.
+The full list of 20 lessons is in [`docs/lessons-learnt.md`](https://github.com/byronbayer/fraud-detection-azure-demo/blob/main/docs/lessons-learnt.md) in the repo. If you're building something similar, it's worth reading before you start — it'll save you the half-days I lost.
 
 ---
 
@@ -310,8 +310,8 @@ This is a demo, not a production system. If you were building this for real, you
 
 Three posts, six technologies, one fraud detection platform. Here's what we covered:
 
-- **Part 1:** Architecture decisions, star schema and graph data models, 12-file Terraform infrastructure, naming conventions, Key Vault integration, cost breakdown
-- **Part 2:** Seed data with five fraud patterns, medallion pipeline (Bronze → Silver → Gold), Neo4j export with type compatibility gotchas
+- **Part 1:** Architecture decisions, star schema and graph data models, 14-file Terraform infrastructure, naming conventions, Key Vault integration, cost breakdown
+- **Part 2:** Seed data with six fraud patterns, medallion pipeline (Bronze → Silver → Gold), Neo4j export with type compatibility gotchas
 - **Part 3:** Seven Cypher fraud detection queries, dual-backend AI query interface, GPT-4o routing, production considerations
 
 The whole thing deploys in ~15 minutes, runs on ~£50–70/month, and destroys cleanly with one command. Every component justifies its presence — there's no technology included just for the sake of variety.

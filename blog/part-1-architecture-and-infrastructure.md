@@ -36,7 +36,7 @@ Fraud detection is the ideal domain because it genuinely *needs* all of them. Re
 
 The system follows a fairly standard modern data architecture pattern, with one twist — it routes queries to *two* different backends depending on what you're asking.
 
-**PostgreSQL** acts as the source OLTP system, holding a star schema with ~10,000 financial transactions across 500 customers, 200 merchants, and ~1,000 accounts. Five deliberate fraud patterns are embedded in the seed data (more on that in Part 2).
+**PostgreSQL** acts as the source OLTP system, holding a star schema with ~10,000 financial transactions across 500 customers, 200 merchants, and ~1,000 accounts. Six deliberate fraud patterns are embedded in the seed data (more on that in Part 2).
 
 **Databricks** ingests everything via JDBC and processes it through three **medallion layers**:
 - **Bronze** — raw copy with metadata

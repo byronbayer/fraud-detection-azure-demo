@@ -34,7 +34,7 @@ val openaiEndpoint   = getConfig("openai-endpoint")
 val openaiKey        = getConfig("openai-key")
 val openaiDeployment = getConfig("openai-deployment", "gpt-4o")
 val goldPath         = getConfig("gold-path", "/mnt/fraud/gold")
-val neo4jUrl         = getConfig("neo4j-url", "bolt://localhost:7687")
+val neo4jUrl         = getConfig("neo4j-url", "bolt://localhost:7687") // local dev fallback
 val neo4jUser        = getConfig("neo4j-user", "neo4j")
 val neo4jPassword    = getConfig("neo4j-password", "fraud-demo-2026")
 

@@ -17,9 +17,9 @@ Before the pipeline has anything to process, PostgreSQL needs data. The seed scr
 - **500 customers** across 8 countries
 - **200 merchants** across 10 categories (15% in high-risk countries)
 - **~1,000 accounts** (1–3 per customer)
-- **~10,000 transactions** — 9,000 normal, plus five deliberate fraud patterns
+- **~10,000 transactions** — 9,000 normal, plus six deliberate fraud patterns
 
-Those five patterns are the whole point of the seed data. If everything were random, there'd be nothing to detect:
+Those six patterns are the whole point of the seed data. If everything were random, there'd be nothing to detect:
 
 | Pattern | What It Does | How It Works |
 |---------|-------------|--------------|
@@ -28,6 +28,7 @@ Those five patterns are the whole point of the seed data. If everything were ran
 | **Structuring** | Amounts just below £10,000 | Classic smurfing — breaking large sums into sub-threshold chunks |
 | **New-account exploitation** | High-value transactions within 48 hours of opening | Tests whether the system flags suspicious early activity |
 | **Cross-border anomalies** | Domestic customer → high-risk country merchant | Unexpected geographic transaction patterns |
+| **High-velocity pairs** | 5–15 repeated transfers between the same account pair | Surfaces concentrated account-to-account churn that can indicate mule routing |
 
 Each pattern flags the relevant transactions with `is_flagged = true` and a `flag_reason` explaining the pattern. This means we know ground truth — we can validate that the pipeline and graph queries actually surface the right patterns.
 
@@ -298,7 +299,7 @@ neo4jOpts(decimalsToDoubles(customerNodes).write)
   .save()
 ```
 
-Five write operations in total: Customer nodes, Account nodes, Merchant nodes, OWNS relationships (Customer→Account), and TRANSACTED_WITH relationships (Account→Account). The connector handles upserts and constraint creation automatically via `NODE_CONSTRAINTS` and `RELATIONSHIP_CONSTRAINTS`.
+Five write operations in total: Customer nodes, Account nodes, Merchant nodes, OWNS relationships (Customer→Account), and TRANSACTED_WITH relationships (Account→Account). The connector handles upserts, and node writes use `NODE_CONSTRAINTS` for schema optimisation.
 
 ---
 

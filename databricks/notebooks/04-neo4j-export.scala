@@ -7,7 +7,7 @@
 // ring detection via Cypher traversals.
 //
 // Prerequisites:
-//   - Neo4j instance running (Docker Compose — see neo4j/docker-compose.yml)
+//   - Neo4j instance running and reachable from Databricks (ACI/public endpoint)
 //   - Neo4j Spark Connector library installed on the cluster
 //   - Gold layer tables populated (03-gold-aggregation)
 //
@@ -29,9 +29,13 @@ def getConfig(key: String, fallback: String = ""): String = {
 }
 
 val goldPath      = getConfig("gold-path", "/mnt/fraud/gold")
-val neo4jUrl      = getConfig("neo4j-url", "bolt://localhost:7687")
+val neo4jUrl      = getConfig("neo4j-url", "bolt://localhost:7687") // local dev fallback
 val neo4jUser     = getConfig("neo4j-user", "neo4j")
 val neo4jPassword = getConfig("neo4j-password", "fraud-demo-2026")
+val neo4jBrowserUrl = neo4jUrl
+  .replace("bolt://", "http://")
+  .replace("neo4j://", "http://")
+  .replace(":7687", ":7474")
 
 println(s"Gold path: $goldPath")
 println(s"Neo4j URL: $neo4jUrl")
@@ -241,5 +245,5 @@ println(s"  Merchant nodes:             ${merchantNodes.count()}")
 println(s"  OWNS relationships:         ${ownsRels.count()}")
 println(s"  TRANSACTED_WITH relationships: ${transactedRels.count()}")
 println(s"\n  Neo4j URL: $neo4jUrl")
-println(s"  Connect via Neo4j Browser:  http://localhost:7474")
+println(s"  Connect via Neo4j Browser:  $neo4jBrowserUrl")
 println("=" * 60)
